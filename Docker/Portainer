@@ -1,0 +1,39 @@
+Créer un répertoire :
+mkdir portainer
+cd portainer/
+
+nano docker-compose.yml (exemple de contenu pour accès directe sur votre carte physique pour test)
+--------------------------------------------------------------------------------------------------
+version: '3.8'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    hostname: portainer
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    restart: always
+    volumes:
+      - portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - my_lanhome
+
+networks:
+  my_lanhome:
+    external: true
+
+volumes:
+  portainer_data:
+--------------------------------------------------------------------------------------------------
+docker-compose up -d
+
+Connaître l'IP du container :
+docker inspect portainer | grep IPAdress
+
+Se connecter à l'interface WEB :
+http://<IP>:9000/
+
+
