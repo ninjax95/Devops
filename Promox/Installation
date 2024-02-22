@@ -1,0 +1,17 @@
+Partition
+
+fdisk -l
+fdisk /dev/sda
+mkfs.ext4 /dev/sda4
+mount /dev/sda4 /var/lib/vz
+
+blkid /dev/sda4
+/dev/sda4: UUID="le-uuid-de-la-partition" TYPE="ext4"
+
+nano /etc/fstab
+UUID=le-uuid-de-la-partition /var/lib/vz ext4 defaults 0 2
+
+
+vgcreate vg_sda4 /dev/sda4
+lvcreate -l 100%FREE -n lv_sda4 vg_sda4
+
