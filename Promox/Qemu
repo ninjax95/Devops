@@ -3,7 +3,11 @@ copier le vmdk dans un répertoire
 
 Exemple avec EVE-NG
 qemu-img convert -f vmdk EVE-CE-0.vmdk -O qcow2 EVE-CE.qcow2
+qemu-img check target_file.qcow2
+
 Copier le fichier créé dans /dev/pve
+
+
 
 Créer la VM sans attacher de disque puis rattacher  (102 IUD) :
  qm importdisk 102 /dev/pve/EVE-CE.qcow2 local-lvm
