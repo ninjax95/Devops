@@ -1,0 +1,21 @@
+# Utilise l'image officielle Debian Bookworm comme image de base
+FROM debian:latest
+
+# Met à jour la liste des paquets et installe les dépendances nécessaires
+RUN apt-get update && apt-get install -y \
+    ansible \
+    ssh \
+    sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crée un utilisateur non-root (pour une meilleure sécurité) et lui donne accès à sudo sans mot de passe
+RUN useradd -m dockeruser && echo "dockeruser ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/dockeruser && chmod 0440 /etc/sudoers.d/dockeruser
+
+# Change l'utilisateur par défaut (évite d'être root)
+USER dockeruser
+
+# Répertoire de travail
+WORKDIR /home/dockeruser
+
+# Commande par défaut pour garder le conteneur en vie et permettre l'accès interactif
+CMD ["/bin/bash"]
