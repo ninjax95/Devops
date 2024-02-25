@@ -19,3 +19,43 @@ WORKDIR /home/dockeruser
 
 # Commande par défaut pour garder le conteneur en vie et permettre l'accès interactif
 CMD ["/bin/bash"]
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+Avec SSH
+
+# Utilise l'image officielle Debian Bookworm comme image de base
+FROM debian:latest
+
+# Met à jour la liste des paquets et installe les dépendances nécessaires, y compris openssh-server
+RUN apt-get update && apt-get install -y \
+    ansible \
+    ssh \
+    sudo \
+    openssh-server \
+    && rm -rf /var/lib/apt/lists/*
+
+# Prépare le répertoire pour les fichiers de configuration SSH et la clé d'hôte
+RUN mkdir /var/run/sshd
+
+# Change le mot de passe root (remplace 'your_password' par le mot de passe désiré)
+RUN echo 'root:your_password' | chpasswd
+
+# Configure SSH pour permettre la connexion en tant que root
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Pour des raisons de sécurité, il est recommandé de désactiver l'utilisation de mots de passe en clair pour SSH
+# Décommente la ligne suivante pour désactiver l'authentification par mot de passe (et utiliser des clés SSH à la place)
+# RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+
+# Crée un utilisateur non-root (pour une meilleure sécurité) et lui donne accès à sudo sans mot de passe
+RUN useradd -m dockeruser && echo "dockeruser ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/dockeruser && chmod 0440 /etc/sudoers.d/dockeruser
+
+# Change l'utilisateur par défaut (évite d'être root)
+USER dockeruser
+
+# Répertoire de travail
+WORKDIR /home/dockeruser
+
+# Commande par défaut pour démarrer le serveur SSH et garder le conteneur en vie
+CMD ["/usr/sbin/sshd", "-D"]
