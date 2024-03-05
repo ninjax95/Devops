@@ -1,0 +1,5 @@
+kibana@kibana:~$ ./bin/kibana-verification-code 
+Kibana is currently running with legacy OpenSSL providers enabled! For details and instructions on how to disable see https://www.elastic.co/guide/en/kibana/8.12/production.html#openssl-legacy-provider
+Your verification code is:  530 981
+
+
