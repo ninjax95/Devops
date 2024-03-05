@@ -1,0 +1,21 @@
+# Utiliser une image de base avec le système d'exploitation souhaité
+FROM debian:latest
+
+# Mettre à jour les paquets disponibles
+RUN apt-get update
+
+# Installer les dépendances nécessaires
+RUN apt-get install -y rsyslog
+
+# Télécharger et installer RsyslogConf depuis le référentiel GitHub
+RUN apt-get install -y git
+RUN git clone https://github.com/rainer42/rsyslogconf /rsyslogconf
+
+# Définir le répertoire de travail
+WORKDIR /rsyslogconf
+
+# Exposer le port 8080 utilisé par RsyslogConf
+EXPOSE 8080
+
+# Lancer RsyslogConf au démarrage du conteneur
+CMD ["python", "rsyslogconf.py"]
