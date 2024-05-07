@@ -1,1 +1,33 @@
+sudo apt-get update
+sudo apt-get upgrade
+sudo install git
+sudo useradd -s /bin/bash -d /opt/stack -m stack
 
+sudo chmod +x /opt/stack
+echo "stack ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/stack
+sudo -u stack -i
+git clone https://opendev.org/openstack/devstack
+cd devstack
+The devstack repo contains a script that installs OpenStack and templates for configuration files.
+
+Create a local.conf
+Create a local.conf file with four passwords preset at the root of the devstack git repo.
+
+[[local|localrc]]
+ADMIN_PASSWORD=secret
+DATABASE_PASSWORD=$ADMIN_PASSWORD
+RABBIT_PASSWORD=$ADMIN_PASSWORD
+SERVICE_PASSWORD=$ADMIN_PASSWORD
+This is the minimum required config to get started with DevStack.
+
+ Note
+
+There is a sample local.conf file under the samples directory in the devstack repository.
+
+ Warning
+
+Only use alphanumeric characters in your passwords, as some services fail to work when using special characters.
+
+Start the install
+./stack.sh
+This will take 15 - 30 minutes, largely depending on the speed of your internet connection. Many git trees and packages will be installed during this process.
