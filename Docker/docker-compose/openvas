@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   openvas:
-    image: securecompliance/gvm
+    image: greenbone/openvas-scanner:latest
     container_name: openvas
     restart: unless-stopped
     ports:
