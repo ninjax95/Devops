@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  openvas:
+    image: securecompliance/gvm
+    container_name: openvas
+    restart: unless-stopped
+    ports:
+      - "9392:9392"
+    environment:
+      - PASSWORD=YourAdminPassword  # Change this to a strong password
+      - SSHD=false
+      - RELATIVE=false
+    volumes:
+      - openvas_data:/data
+
+volumes:
+  openvas_data:
+    name: openvas_data
