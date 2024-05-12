@@ -7,3 +7,11 @@ source env/bin/activate
 (env)$ pip3 install python-openstackclient
 
 openstack --help
+
+
+récupérer le fichier RC dans openstack après avoir créer un utilisateur
+source openrc.sh
+source env/bin/activate
+
+exemple : openstack server list
+
