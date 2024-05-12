@@ -1,6 +1,6 @@
 sudo apt-get update
 sudo apt-get upgrade
-sudo install git
+sudo apt install git
 sudo useradd -s /bin/bash -d /opt/stack -m stack
 
 sudo chmod +x /opt/stack
