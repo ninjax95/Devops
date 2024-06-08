@@ -28,6 +28,24 @@ networks:
 volumes:
   portainer_data:
 --------------------------------------------------------------------------------------------------
+version: '3.8'
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    hostname: portainer
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    restart: always
+    volumes:
+      - portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  portainer_data:
+----------------------------------------------------------------------------------------------------
 docker-compose up -d
 
 Connaître l'IP du container :
