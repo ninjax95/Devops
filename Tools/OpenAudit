@@ -1,0 +1,1 @@
+sudo apt-get install mariadb-server apache2 apache2-utils libapache2-mod-php openssh-client php php-cli php-curl php-intl php-ldap php-mbstring php-mysql php-snmp php-xml nmap zip wget curl sshpass screen smbclient logrotate ipmitool snmp libcrypt-cbc-perl
