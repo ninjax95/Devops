@@ -1,6 +1,62 @@
+A installer après ansible
+
+1. Installer et configurer MySQL
+Installer MySQL :
+sudo apt update
+sudo apt install -y mysql-server
+
+Sécuriser l'installation de MySQL :
+sudo mysql_secure_installation
+
+Créer une base de données et un utilisateur pour Semaphore :
+sudo mysql -u root -p
+
+Ensuite, exécutez les commandes SQL suivantes pour créer la base de données et l'utilisateur :
+CREATE DATABASE semaphore;
+CREATE USER 'semaphore_user'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON semaphore.* TO 'semaphore_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+
+#https://github.com/semaphoreui/semaphore/releases --> choisir version
+
 wget https://github.com/semaphoreui/semaphore/releases/download//semaphore_2.10.7_linux_amd64.deb
 sudo dpkg -i semaphore_2.10.7_linux_amd64.deb
 
+semaphore setup
+-----------------------------------------------------------------------------------------
+DB Hostname (default 127.0.0.1:3306):
+DB User (default root): semaphore_user
+DB Name (default semaphore): semaphore
+DB Password: password
+--------------------------------------------------------------------------------------
+semaphore -config /root/config.json
 
+http://<votre_ip>:3000
 
-https://github.com/semaphoreui/semaphore/releases
+#test 
+/usr/bin/semaphore server --config /root/config.json
+
+# mettre en service
+sudo nano /etc/systemd/system/semaphore.service
+-------------------------------------------------------------------------------
+[Unit]
+Description=Semaphore Ansible Web UI
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/semaphore server --config /root/config.json
+Restart=always
+User=root
+Group=root
+Environment=USER=root HOME=/root
+
+[Install]
+WantedBy=multi-user.target
+-------------------------------------------------------------------------------
+sudo systemctl daemon-reload
+sudo systemctl restart semaphore
+sudo systemctl status semaphore
+
+#logs si besoin
+sudo journalctl -u semaphore
