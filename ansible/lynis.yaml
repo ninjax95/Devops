@@ -1,0 +1,26 @@
+---
+- name: Installation et audit Lynis
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt-get
+      apt:
+        update_cache: yes
+
+    - name: Install Lynis
+      apt:
+        name: lynis
+        state: present
+
+    - name: Run Lynis audit
+      shell: lynis audit system --cronjob
+      register: lynis_output
+
+    - name: Save Lynis report to log file
+      copy:
+        content: "{{ lynis_output.stdout }}"
+        dest: "/var/log/lynis_audit_report_{{ inventory_hostname }}.log"
+
+    - name: Display Lynis report
+      debug:
+        var: lynis_output.stdout
