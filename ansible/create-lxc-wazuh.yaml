@@ -45,24 +45,7 @@
         msg: "Cloned LXC containers are launched and running: {{ lxc_list.stdout }}"
 
     - name: Install Wazuh Agent in each container
+      include_tasks: install_wazuh_agent.yaml
       loop: "{{ container_names }}"
-      block:
-        - name: Download Wazuh Agent package
-          shell: wget https://packages.wazuh.com/4.x/apt/pool/main/w/wazuh-agent/wazuh-agent_4.8.0-1_amd64.deb
-          args:
-            chdir: /tmp
-
-        - name: Install Wazuh Agent
-          shell: |
-            WAZUH_MANAGER='10.10.193.187' WAZUH_AGENT_NAME='{{ item }}' dpkg -i /tmp/wazuh-agent_4.8.0-1_amd64.deb
-          args:
-            chdir: /tmp
-
-        - name: Reload systemd manager configuration
-          shell: sudo systemctl daemon-reload
-
-        - name: Enable Wazuh Agent
-          shell: sudo systemctl enable wazuh-agent
-
-        - name: Start Wazuh Agent
-          shell: sudo systemctl start wazuh-agent
+      loop_control:
+        loop_var: container_name
