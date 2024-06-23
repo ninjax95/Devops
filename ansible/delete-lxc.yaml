@@ -1,0 +1,35 @@
+---
+- name: Delete LXC containers
+  hosts: all
+  become: yes
+  vars:
+    container_names:
+      - server1
+      - server2
+      - server3
+      - server4
+      - server5
+  tasks:
+    - name: Ensure LXC is installed
+      apt:
+        name: lxc
+        state: present
+
+    - name: Stop LXC containers if running
+      loop: "{{ container_names }}"
+      command: lxc stop {{ item }}
+      ignore_errors: yes
+      register: lxc_stop
+
+    - name: Delete LXC containers
+      loop: "{{ container_names }}"
+      command: lxc delete {{ item }}
+      ignore_errors: yes
+      register: lxc_delete
+
+    - name: Ensure containers are deleted
+      command: lxc list
+      register: lxc_list
+
+    - debug:
+        msg: "LXC containers have been deleted: {{ lxc_list.stdout }}"
